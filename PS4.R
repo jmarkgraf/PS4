@@ -76,5 +76,32 @@ with(election[election$winner_party == "Dem.", ],
      col = "blue"))
 legend("topleft", c("Republican", "Democrat"), pch = c(2, 0), col = c("red", "blue"), cex = 0.6)
 
-# Comment: historically, no party benefitted more from discrepancy; the last 5 elections had low discrepancies.
+## Comment: historically, no party benefitted more from discrepancy; the last 5 elections had low discrepancies.
+
+# exporting graphs in pdf
+setwd("/Users/jonasmarkgraf/Dropbox/Hertie School/(4) Applied Statistical Programming (WUSTL)/Repositories/PS4")
+pdf(file = "ElectionPlots.pdf")
+par(mfrow(c(1,2)))
+# college vs. popular voteshare over time
+plot(election$year, election$college_voteshare, type = "p", ylim = c(25, 110),
+     main = "College Election Vs. Popular Voteshare, 1824-2016",
+     ylab = "Voteshare (%)", xlab = "Election Year")
+points(election$year, election$pop_voteshare, pch = 3, col = "red")
+legend("topleft", c("College", "Popular"), pch = c(1, 3), col = c("black", "red"), cex = 0.6)
+
+# discrepancy between college and popular voteshare by party
+with(election[election$winner_party == "Rep.", ], plot(year, college_voteshare - pop_voteshare,
+                                                       main = "Discrepancy College and Popular Voteshare \nby Winning Party, 1824-2016",
+                                                       ylab = "Difference (in %)", xlab = "Election Year", pch = 2, col = "red",
+                                                       ylim = c(0, 60)))
+with(election[election$winner_party == "Rep.", ], 
+     abline(lm((college_voteshare - pop_voteshare) ~ year),
+            col = "red"))
+with(election[election$winner_party == "Dem.", ], points(year, college_voteshare - pop_voteshare,
+                                                         pch = 0, col = "blue"))
+with(election[election$winner_party == "Dem.", ], 
+     abline(lm((college_voteshare - pop_voteshare) ~ year),
+            col = "blue"))
+legend("topleft", c("Republican", "Democrat"), pch = c(2, 0), col = c("red", "blue"), cex = 0.6)
+dev.off()
 
